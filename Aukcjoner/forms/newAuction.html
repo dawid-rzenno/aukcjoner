@@ -1,0 +1,151 @@
+<html lang="pl">
+<head>
+   <title>Portal Aukcyjny</title>
+      
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+   
+   <link rel="stylesheet" href="../style.css" type="text/css" />
+
+   <style>}
+
+      #one {
+            height: 260px;
+      }
+   
+      input {
+            margin-top: 5px;
+      }    
+      
+      .row{
+
+         padding: 10px;
+         width: 100%;
+         background-color: transparent;
+      }
+
+      input{
+
+         width: 100%;
+         height: 40px;   
+         padding: 10px;
+      
+      }
+
+      textarea{
+
+         padding: 10px;
+      }
+
+      #username{
+
+         font-size: 20px;
+      }
+
+   </style>
+
+</head>
+<body>
+
+   <header></header>
+
+   <section>
+
+      <div id="center1">
+
+         <div id="one">
+
+            <h2>Dodawanie nowej aukcji</h2>
+
+            <form id="newAuction" style="padding: 10px;">
+
+                  <div id="auctionDescription">
+                     
+                     <div class="row" id="info" style="color: red"></div>
+                     <div class="row" style="font-size: 20px;"> <b> Sprzedający: </b></div><input id="username" type="text" name="seller"> 
+                     <div class="row"> Tytuł aukcji </div><input type="text" id="title" name="title">
+                     <div class="row"> Kategoria </div>
+                     
+                        <select name="category">
+                           <option value="moda">Moda</option>
+                           <option value="elektronika">Elektronika</option>
+                           <option value="motoryzacja">Motoryzacja</option>
+                           <option value="domOgrod"> Dom i ogrod </option>
+                           <option value="dziecko"> Dziecko </option>
+                           <option value="uroda"> Uroda </option>
+                           <option value="rozrywka"> Rozrywka </option>
+                           <option value="kultura"> Kultura </option>
+                           <option value="sport"> Sport </option>
+                           <option value="turystyka"> Turystyka </option>
+                        </select> 
+
+                     <div class="row"> Cena         </div><input type="number" id="price" name="price">
+                     <div class="row"> Opis aukcji  </div><textarea type="text" name="description" style="height: 200px; width: 100%;"></textarea>
+                     
+                  </div>
+
+            </form>
+         
+            <a><div class="submitButton" onclick="validate()"> Dodaj aukcję </div></a>
+            <a href="../index.html"> <div class="submitButton"> Anuluj i wroć do strony głownej</div></a>
+
+         </div>
+      </div>
+
+   </section>
+
+   <footer></footer>
+
+   <script>
+   
+      var formId;
+      var url;
+
+      $("#username").val(document.cookie);
+      $('#username').focus(function(e) {
+
+         $(this).blur();
+      
+      });
+
+      function validate(){
+
+         if(($('#title').val() != "") && ($('#price').val() != "")) add()
+         else {
+
+            $('#newAuction').css('background-color', 'rgba(255, 0, 0, 0.2)');
+            $('#newAuction').css('border', 'red solid 1px');
+            $('#info').html('Błąd: Tytuł i cena nie mogą pozostać puste');
+            window.location.href = "#info";
+
+         }
+      }
+
+      function add(){
+         
+         console.log( "price: " + $("[name='price']").val());
+
+         formId = "#newAuction";
+         url = "../php/auction/newAuction.php";
+         databaseRequest(formId, url);
+         console.log("button has clicked");
+   
+      }
+      function main(serverResponse){
+         var response = JSON.parse(serverResponse);
+         
+         console.log(response);
+         if(response.status == "success"){
+            
+            alert("Aukcja dodana pomyślnie");
+            window.location.href = "../forms/auction.html?id=" + response.id;
+         
+         }else alert("Dodanie aukcji nie powiodło się"); 
+      }
+      
+   </script>
+   <script src="../js/databaseRequest.js"></script>
+
+</body>
+</html>

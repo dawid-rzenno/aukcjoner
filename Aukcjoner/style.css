@@ -1,0 +1,279 @@
+body {
+    background-color: whitesmoke;
+    font-family: sans-serif;
+    margin: 0%;
+}
+
+
+header {
+    width: 100%;
+    height: 80px;
+    background-color:#2874A6;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    -webkit-box-shadow: 0px 4px 10px -2px rgba(0,0,0,0.44);
+    -moz-box-shadow: 0px 4px 10px -2px rgba(0,0,0,0.44);
+    box-shadow: 0px 4px 10px -2px rgba(0,0,0,0.44);
+}
+
+#logo {
+    height: 40px;
+    width: 300px;
+}
+
+#search {
+    height: 40px;
+    width: 300px;
+    
+}
+
+#search_input {
+    display:block;
+    border: none;
+    background-color: whitesmoke;  
+    font-size: 17px;
+    color: black;
+}
+
+#search_input:focus {
+    outline: none;
+    color: black;
+}
+
+#center {
+    display: flex;
+    max-width: 50%;
+    height: 40px;
+    width: 300px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+}
+
+section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    height: 500px;
+}
+
+.submitButton{
+
+    margin: 10px;
+    padding: 10px;
+    background-color: white;
+    float: left;
+    border: solid gray 1px;
+
+}
+
+#center1 {
+    display: flex;
+    max-width: 50%;
+    height: 400px;
+    width: 600px;
+    align-items: flex-start;
+    justify-content: space-around;
+    flex-direction: row;
+}
+
+#finder {
+    background-color: whitesmoke;  
+    width: 260px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding-left: 5px;
+    flex: 1;
+}
+
+#submitbutton {
+    flex: 2;
+    margin-left: 10px;
+    padding: 10px;
+    background-color: whitesmoke;
+    color: dimgray;
+    border: whitesmoke 1px solid;
+
+}
+
+#log {
+    float: left;
+    display: flex;
+    right: 100px;
+    top: 20px; 
+}
+
+#new {
+    margin-left: 10px;
+    padding: 10px;
+    background-color: whitesmoke;
+    color: dimgray;
+    display: flex;
+    align-items: center; 
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+a:hover, #buyButton:hover, #submitButton:hover{
+   
+   cursor: grab;
+    text-decoration: none;
+    color: blue;
+}
+
+#login {
+    margin-left: 10px;
+    font-style: normal;
+    float: left;
+    position: relative;
+    height: 40px;
+    width: 105px;
+    background-color: #2ECC71;
+    display: flex;
+    align-items: center; 
+}
+
+
+#login:hover {
+    background-color: limegreen;
+    text-decoration: none;
+    color: whitesmoke;
+}
+
+.headerButton, .registerButton{
+
+   background-color: white; 
+   text-align: center; 
+   padding: 10px;
+   color: black;
+   margin-left: 10px;
+}
+
+.registerButton {
+
+   background-color: #2ECC71;
+   color: white;
+}
+
+#register:hover {
+    background-color: #AED6F1;
+}
+
+nav {
+    width: 100%;
+    height: 70px;
+    background-color: #21618C;
+}
+
+#menu {
+   padding-top: 10px;
+   padding-bottom: 10px;    
+   float: left;
+   width: 100%;
+   background-color: #21618C;
+   -webkit-box-shadow: 0px 4px 10px -2px rgba(0,0,0,0.44);
+   -moz-box-shadow: 0px 4px 10px -2px rgba(0,0,0,0.44);
+   box-shadow: 0px 4px 10px -2px rgba(0,0,0,0.44);
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+#menu ul {
+   clear: left;
+   float: left;
+   list-style: none;
+   margin: 0;
+   padding: 0;
+   text-align: center;
+}
+
+#menu ul li {
+   display: block;
+   float: left;
+   list-style: none;
+   margin: 0;
+   padding: 0;
+}
+
+#menu ul li a {
+   display: block;
+   margin: 0px 0px 0px 2px;
+   padding: 3px 10px;
+   background: whitesmoke;
+   color: dimgray;
+   text-decoration: none;
+   line-height: 45px;
+   width: 100px;
+}
+
+#menu ul li a:hover {
+        color: #fff;
+        animation: background 300ms;
+        -webkit-animation: background 300ms;
+        animation-iteration-count: 1;
+        -webkit-animation-iteration-count: 1;
+        background-color: #2874A6;
+}
+	  
+      @keyframes background
+      {
+        0% { background: #ddd; color: dimgray; }
+        100% { background: #2874A6; color: #fff; }
+      }
+
+      @-webkit-keyframes background
+      {
+        0% { background: #ddd; color: dimgray; }
+        100% { background: #2874A6; color: #fff; }
+      }
+
+#menu ul li a.zaznaczony, #menu ul li a.zaznaczony:hover {
+   color: #fff;
+   background: #000;
+   font-weight: bold;
+}
+
+.title, .description, .price{
+
+   padding: 10px;
+   flex-grow: 1;
+   flex-basis: 40%;
+}
+
+.price{
+
+   flex-basis: 20%;
+}
+
+
+.row{
+
+   display: flex;
+   flex-direction: row;
+   width: 100%;
+   margin-top: 10px;
+   background-color: white;
+   align-items: stretch;
+   
+}
+
+#results, #sold, #buyed, .stats{
+
+   display: flex;
+   flex-direction: column;
+
+   margin: 100px;
+   
+   padding: 10px;
+   background-color: antiquewhite;
+
+
+}

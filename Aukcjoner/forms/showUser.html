@@ -1,0 +1,189 @@
+<html lang="pl">
+<head>
+    <title>Portal Aukcyjny</title>
+        
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    <link rel="stylesheet" href="../style.css" type="text/css" />
+
+    <style>
+    
+        header {
+        -webkit-box-shadow: 0px 4px 10px -2px rgba(0,0,0,0.44);
+        -moz-box-shadow: 0px 4px 10px -2px rgba(0,0,0,0.44);
+        box-shadow: 0px 4px 10px -2px rgba(0,0,0,0.44);
+        }
+
+        .row, .info{
+
+           padding: 10px;
+           background-color: white;
+           width: calc(100% - 20px);
+        
+        }
+
+        .info, .infoDescr, #title{
+
+           background-color: transparent;
+           width: calc(100% - 20px);
+           text-align: right;
+           padding: 10px;
+        }
+        
+        #title{
+
+           padding: 10px;
+           font-weight: bold;
+        }
+
+        .infoDescr{
+
+           text-align: left;
+
+        }
+
+        .userDescription{
+
+            display: flex;
+            flex-direction: column;
+            min-width: 800px; 
+            padding: 20px;
+
+        }
+
+        .main{
+
+         width: 100%;
+         display: flex;
+         justify-content: center;
+        }
+
+        .test{
+
+         width: 100px;
+         height: 100px;
+         background-color: red;
+        }
+        
+        #results, #sold, #buyed, .stats{
+
+           margin: 10px;
+        }
+
+    </style>
+
+</head>
+<body>
+
+   <header></header>
+
+   <div class="main">
+
+      <div class="userDescription">
+
+         <div class="row"><span class="infoDescr"> Nazwa użytkownika </span><span id="title"> nazwa_uzytkownika </span></div>
+         <div class="row"><span class="infoDescr"> Imię i nazwisko </span><span class="info" id="name"></span></div> 
+         <div class="row"><span class="infoDescr"> Saldo </span><span class="info" id="saldo"></span></div> 
+         <div class="row"><span class="infoDescr"> Email </span><span class="info" id="email"></span></div>
+         <div class="row"><span class="infoDescr"> Ilość założonych aukcji </span><span class="info" id="auctionsCount"></span></div>
+
+         <a style="margin-top: 10px;" href="../index.html"><div class="submitButton"> Wroć do strony głownej</div></a>
+
+         <div id="buyed" class="stats"> <h3> Wygrane aukcje: </h3> </div>
+         <div id="set" class="stats"> <h3> Ustawione aukcje: </h3> </div>
+         <div id="sold" class="stats"> <h3> Sprzedane aukcje: </h3> </div>
+
+      </div>
+
+   </div>
+   
+   <script src="../js/databaseRequest.js"></script>
+   <script>
+   
+      var formId;
+      var url;
+
+      function listSold(){
+
+         formId = "";
+         param = "keywords=:sold&login=" + document.cookie;
+         url = "../php/auction/listAuctions.php";
+
+         databaseRequest(formId, url, param);
+
+      }
+
+      function listSet(){
+
+         formId = "";
+         param = "keywords=:set&login=" + document.cookie;
+         url = "../php/auction/listAuctions.php";
+
+         databaseRequest(formId, url, param);
+         listSold();
+
+      }
+
+      function listBuyed(){
+
+         formId = "";
+         param = "keywords=:buyed&login=" + document.cookie;
+         url = "../php/auction/listAuctions.php";
+
+         databaseRequest(formId, url, param);
+         listSet();
+      }
+
+
+
+      function showUser(){
+
+         formId = "";
+         param = "login=" + document.cookie;
+         url = "../php/user/showUser.php";
+         console.log(url);
+
+         console.log("cookie set ----> " + document.cookie);
+
+         databaseRequest(formId, url, param);
+         listBuyed();
+      }
+      showUser();
+
+      function main(serverResponse){
+
+         var response = JSON.parse(serverResponse);
+         
+         $('#title').html(response.login);
+         $('#name').html(response.name);
+         $('#saldo').html(response.saldo);
+         $('#email').html(response.email);
+         $('#auctionsCount').html(response.auctionsCount);
+
+         var returnString;
+         
+         if(response.status == 'buyed') returnString = "<h3> Wygrane aukcje: </h3>"; 
+         if(response.status == 'set') returnString = "<h3> Wystawione aukcje: </h3>"; 
+         if(response.status == 'sold') returnString = "<h3> Sprzedane aukcje: </h3>"; 
+         
+
+         for (i in response.title) {
+            
+            returnString += "<a href='../forms/auction.html?id=" + response.id[i] + "'> <div class='row'> <div class='title'>" + response.title[i] + "</div> <div class='description'>" + response.description[i] + "</div> <div class='price'> " + response.price[i] + " </div> </div> </a> <br>";
+            //// response.seller[i] and responce.buyer[i] are also available 
+         }
+
+         if(response.status == "buyed") $("#buyed").html(returnString);
+         if(response.status == "set") $("#set").html(returnString);
+         if(response.status == "sold") $("#sold").html(returnString);
+         
+         console.log(response.title);
+
+      }
+      
+   </script>
+
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html> 
+<html lang="pl">
+
+    <head>
+        
+        <title>Portal Aukcyjny</title>
+        
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <link rel="stylesheet" href="style.css" type="text/css" />
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+
+         <style>
+         
+            #log .submitButton{
+
+               margin-left: 0px;
+
+            }
+         
+         </style>
+
+    </head>
+    
+    <body>
+
+      <header>
+         <div id="logo"><img src=""></div>
+
+         <div id="center">
+         <form id="search">
+            <div id="finder">
+               
+               <input id="search_input" type="text" name="keywords"  placeholder="Czego szukasz?">
+            
+            </div> 
+         </form>
+
+         <a><div class="submitButton" onclick="search()" > Szukaj </div></a>
+         </div>
+
+         <div id="log">
+            
+            <a href="forms/showUser.html" ><div id="user" class="submitButton"> </div></a>
+            <a href="forms/newAuction.html" ><div id="newAuction" class="submitButton"> Nowa aukcja </div></a>
+            <a href="" onclick="logOut()"><div id="logOut" class="submitButton"> Wyloguj </div></a>
+            <a href="forms/loginWindow.html"><div id="logIn" class="submitButton"> Zaloguj</div></a>
+            <a href="forms/loginWindow.html"><div id="regIn" class="submitButton"> Zarejestruj</div></a>
+         </div>
+      </header>
+   
+      <div id="menu">
+
+         <ul>
+         <li onclick="listCategory('moda')">          <a >Moda</a></li>
+         <li onclick="listCategory('elektronika')">   <a >Elektronika</a></li>
+         <li onclick="listCategory('motoryzacja')">   <a >Motoryzacja</a></li>
+         <li onclick="listCategory('domOgrod')">      <a >Dom i ogród</a></li>
+         <li onclick="listCategory('dziecko')">       <a >Dziecko</a></li>
+         <li onclick="listCategory('uroda')">         <a >Uroda</a></li>
+         <li onclick="listCategory('rozrywka')">      <a >Rozrywka</a></li>
+         <li onclick="listCategory('kultura')">       <a >Kultura</a></li>
+         <li onclick="listCategory('sport')">         <a >Sport</a></li>
+         <li onclick="listCategory('turystyka')">     <a >Turystyka</a></li>    
+         </ul>
+
+      </div>
+      
+      <div id="results"></div>
+      
+      <script src="js/databaseRequest.js"></script>
+      <script>
+
+         function logOut(){
+
+            Cookies.remove('');
+            location.reload();
+            console.log(document.cookie);
+
+         }
+
+         function isLogged(){
+
+            if(document.cookie == "") {
+               
+               $('#newAuction').hide();
+               $('#logOut').hide();
+               $('#user').hide();
+
+            }else{
+
+               $('#logIn').hide()
+               $('#regIn').hide()
+               $('#user').html('Zalogowano jako ' + document.cookie);
+
+            }
+         }
+         isLogged();
+
+         var formId;
+         var url;
+
+         $('#search_input').bind('keypress keydown keyup', function(e){ 
+            
+            if(e.keyCode == 13) { 
+               
+               e.preventDefault(); 
+               search();
+            }
+         });
+
+         function listCategory(category){
+
+            formId = "";
+            param = "category=" + category;
+            url = "php/auction/listAuctions.php";
+            databaseRequest(formId, url, param);
+         }
+
+         function listAllAuctions(){
+
+            formId = "";
+            param = "keywords=:all";
+            url = "php/auction/listAuctions.php";
+            databaseRequest(formId, url, param);
+         }
+         listAllAuctions();
+
+         function search(){
+
+            formId = "#search";
+            url = "php/auction/listAuctions.php";
+
+            if($('#search_input').val() == "" ) listAllAuctions()
+            else databaseRequest(formId, url);
+
+            console.log("button has been clicked");
+      
+         }
+
+         function main(serverResponse){
+
+            //// NO TOUCHA
+            var response = JSON.parse(serverResponse);
+
+            //// Loop which is listing every record from database
+            var returnString = "";
+            for (i in response.title) {
+               
+               returnString += "<a href='forms/auction.html?id=" + response.id[i] + "'> <div class='row'> <div class='title'>" + response.title[i] + "</div> <div class='description'>" + response.description[i] + "</div> <div class='price'> " + response.price[i] + " </div> </div> </a> <br>";
+
+               //// response.seller[i] and responce.buyer[i] are also available 
+
+            }
+
+            console.log(returnString);
+
+            $("#results").html(returnString);
+
+         }
+
+      </script>
+         
+    </body>
+
+</html>

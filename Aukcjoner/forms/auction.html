@@ -1,0 +1,211 @@
+<html lang="pl">
+<head>
+    <title>Portal Aukcyjny</title>
+        
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    
+    <link rel="stylesheet" href="../style.css" type="text/css" />
+
+    <style>
+
+        #center {
+            align-self: center;
+        }
+
+        #one {
+            float: left;
+            position: relative;
+        }
+
+        #two {
+            float: left;
+            margin-left: 20px;
+            position: relative;
+        }
+    
+        input {
+            margin-top: 5px;
+        } 
+
+        #com {
+            border: 1px solid dimgray;
+            height: 300px;
+            width: 500px;
+        }
+        
+        #contact {
+            border: 1px solid dimgray;
+            height: 100px;
+            width: 300px;
+        }
+    
+        header {
+        -webkit-box-shadow: 0px 4px 10px -2px rgba(0,0,0,0.44);
+        -moz-box-shadow: 0px 4px 10px -2px rgba(0,0,0,0.44);
+        box-shadow: 0px 4px 10px -2px rgba(0,0,0,0.44);
+        }
+
+        .row, .info{
+
+           padding: 10px;
+           background-color: white;
+           margin-top: 10px;
+        }
+
+        .row{
+
+           width: calc(30% - 20px);
+
+        }
+
+        .info{
+
+           width: calc(70% - 20px);
+        }
+
+        #auctionDescription{
+
+            display: flex;
+            width: 800px;
+            flex-wrap: wrap;
+
+        }
+        
+    </style>
+
+</head>
+<body>
+
+   <header></header>
+
+   <section>
+
+      <div id="center">
+
+         <div id="one">
+
+            <h2 id="title"> title </h2>
+
+            <div id="auctionDescription">
+               <div class="row"> Opis aukcji  </div><span class="info" id="description"></span> 
+               <div class="row"> Cena         </div><span class="info" id="price">      </span> 
+               <div class="row"> Aukcję wystawił  </div><span class="info" id="seller">     </span> 
+               <div class="row"> Kup jako     </div><span class="info" id="buyer"> </span> 
+            </div>
+
+            <div id="buyButton" class="submitButton" onclick="buy()"> Kup </div>
+            <a href="../index.html"> <div class="submitButton"> Wroć do strony głownej</div></a>
+
+         </div>
+         
+
+      </div>
+   
+   </section>  
+            
+   <script src="../js/databaseRequest.js"></script>
+   <script>
+   
+      if( document.cookie == "" ) $('#buyButton').hide();
+
+      var formId;
+      var url;
+
+      var buyer;
+      var seller;
+      var price;
+
+      function closeAuction(finalBuyer){
+
+         var url_string = window.location.href;
+         var url = new URL(url_string);
+         var id = url.searchParams.get("id");
+
+         formId = "";
+         params = "id=" + id + "&buyer=" + finalBuyer;
+         url = "../php/auction/closeAuction.php";
+
+         console.log("CLOSING AN AUCTION == ID#" + id + " == BUYED BY ====> " + finalBuyer);
+
+         databaseRequest(formId, url, params);
+
+      }
+
+      function buy(){
+         
+         formId = "";
+         params = "buyer=" + buyer + "&seller=" + seller + "&price=" + price;
+         url = "../php/auction/buyRequest.php";
+         databaseRequest(formId, url, params);
+         console.log("button has clicked");
+   
+      }
+
+      function showAuction(){
+
+         var url_string = window.location.href;
+         var url = new URL(url_string);
+         var id = url.searchParams.get("id");
+         
+         formId = "#test";
+         param = "id=" + id;
+         url = "../php/auction/showAuction.php";
+         console.log(url);
+
+         console.log("cookie set ----> " + document.cookie);
+
+         databaseRequest(formId, url, param);
+      }
+      showAuction();
+
+      function main(serverResponse){
+
+         var response = JSON.parse(serverResponse);
+
+         $('#title').html(response.title);
+         $('#description').html(response.description);
+         $('#price').html(response.price);
+         $('#seller').html(response.seller);
+         if(document.cookie != "") $('#buyer').html(document.cookie)
+         else $('#buyer').html("<a href='../forms/loginWindow.html'> Zaloguj się aby kupić </a>");
+
+         price = response.price;
+         seller = response.seller;
+         buyer = document.cookie;
+         
+         console.log("main response: " + response.status);
+
+         if(response.status == "buyed"){
+            
+            alert("Przedmiot zakupiony");
+            console.log("saldo kupca: " + response.buyer + " : " + response.buyerSaldo);
+            console.log("saldo sprzedawcy: " + response.seller + " : " + response.sellerSaldo);
+            closeAuction(response.buyer);
+            
+         } else if(response.status == "closed"){
+            
+            console.log("Auction's closed, response: " + response.status);
+            window.location.href = "../index.html";
+            
+
+         } else if(response.status == "failure"){
+
+            console.log(response.status);
+            console.log(response.info);
+
+         } else if(response.status == "sellerIsBuyer"){
+
+            alert("Nie możesz kupić własnej aukcji");
+            location.reload();
+
+         }
+
+      }
+      
+   </script>
+
+</body>
+</html>

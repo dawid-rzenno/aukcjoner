@@ -1,0 +1,3 @@
+1. Zaimportowaæ plik 'Baza Danych do Importu.sql' do bazy danych mySQL
+2. Przenieœæ folder 'Aukcjoner' do folderu htdocs aplikacji XAMPP
+3. Uruchomiæ przegl¹darkê pod adresem localhost/Aukcjoner/index.html

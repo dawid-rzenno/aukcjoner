@@ -1,0 +1,192 @@
+<html lang="pl">
+<head>
+    <title>Portal Aukcyjny</title>
+        
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    
+    <link rel="stylesheet" href="../style.css" type="text/css" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <style>
+
+        section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            height: 500px;
+        }
+
+        #center1 {
+
+            margin-top: 30px;
+            display: flex;
+            max-width: 50%;
+            width: 600px;
+            align-items: flex-start;
+            justify-content: space-around;
+            flex-direction: row;
+        }
+
+        #one {
+           
+        }
+
+        #one, #two {
+
+           padding: 20px;
+           width: 30%;
+
+        }
+    
+        input {
+            margin-bottom: 10px;
+        }   
+
+        #center1 .submitButton{
+
+           margin-left: 0px;
+
+        }
+
+    </style>
+
+</head>
+<body>
+    <header> </header>
+
+    <section>
+
+        <div id="center1">
+
+            <div id="one">
+
+                <h2>LOGOWANIE</h2>
+
+                <form id="loginForm">
+
+                    Login <input type="text"      name="login"><br />
+                    Hasło <input type="password"  name="password"><br />
+
+                    <!-- usunąć ID w tym miejscu i w JSie jeśli będzie działać -->
+
+                    <div class="submitButton" onclick="submitLogin()"> Zaloguj </div>
+
+                </form>
+
+            </div>
+
+            <div id="two">
+
+                <h2>REJESTRACJA</h2>
+
+                <form id="registerForm">
+
+                     Login <input           type="text"       name="newLogin" id='username'> <br>
+                     Hasło <input           type="password"   name="newPassword" id="newPassword"> <br />
+                     Powtórz hasło: <input  type="password"   name="repeatedPassword" id="repeatedPassword"><br />
+                     Imie i nazwisko <input type="text"       name="name"><br />
+                     E-mail <input          type="text"      name="newEmail"><br />
+
+                        <!-- to do: script that's checking if passwords are the same -->
+
+                    <div class="submitButton" onclick="submitRegister()"> Zarejestruj </div>
+
+                </form>
+                
+            </div>
+
+        </div>
+
+        <a href="../index.html" style="margin-top: 30px;"> <div class="submitButton"> Anuluj i wroć do strony głownej</div></a>
+
+    </section>
+
+    <footer></footer>
+
+    <script>
+
+      var formId;
+      var url; 
+
+      function submitRegister(){
+
+         formId = "#registerForm";
+         url = "../php/user/newUser.php";
+
+         console.log("register selected");
+
+         if( $('#newPassword').val() == $('#repeatedPassword').val() && $('#username').val() != "") {
+               
+            databaseRequest(formId, url);
+            
+         }else{
+
+            $('#two').css('background-color', 'rgba(255, 0, 0, 0.2)');
+            $('#two').css('border', '1px solid red');
+            alert("Wprowadz swoj nowy login oraz poprawnie dwukrotnie hasło");
+
+         }
+
+      }      
+
+      function submitLogin(){
+
+         formId = "#loginForm";
+         url = "../php/user/loginUser.php";
+
+         console.log("login selected");
+
+         databaseRequest(formId, url);
+
+      }
+
+      function main(serverResponse){
+
+         console.log("serverResponse: (main()) " + serverResponse);
+
+         var response = JSON.parse(serverResponse);
+
+         if(formId == "#loginForm"){
+
+            if(response.status == "success") {
+               
+               $('#one').css('background-color', 'rgba(0, 255, 0, 0.2)');
+               $('#one').css('border', '1px solid green');
+
+               document.cookie = response.login + "; path=/";
+               window.location.href = "../index.html";
+            
+            } else {
+
+               $('#one').css('background-color', 'rgba(255, 0, 0, 0.2)');
+               $('#one').css('border', '1px solid red');
+
+               alert('Taki użytkownik nie istnieje');
+
+            }
+
+         }else{
+            
+            if(response.status == "success") {
+               
+               alert('Zarejestrowano pomyślnie');
+               $('#two').css('background-color', 'rgba(0, 255, 0, 0.2)');
+               $('#two').css('border', '1px solid green');
+
+            }else {
+               
+               alert('Taki użytkownik już istnieje');
+               $('#two').css('background-color', 'rgba(255, 0, 0, 0.2)');
+               $('#two').css('border', '1px solid red');
+            
+            }
+         }
+      }
+    
+   </script>
+   <script src="../js/databaseRequest.js"></script>
+
+</body>
+</html>
